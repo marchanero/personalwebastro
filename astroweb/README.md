@@ -1,48 +1,70 @@
-# Astro Starter Kit: Basics
+# Astro Web Project
 
-```sh
-npm create astro@latest -- --template basics
-```
+![Astro](https://astro.build/assets/logo.png)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Introduction
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Welcome to the Astro Web Project! This project is built using Astro, a modern framework for building fast, content-focused websites. The project includes pages for publications, projects, and personal projects, with a modern and responsive design.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Features
 
-## 🚀 Project Structure
+- **Publications Page**: Displays a list of publications with titles, descriptions, and links.
+- **Projects Page**: Displays a list of projects with titles, descriptions, and links.
+- **Personal Projects Page**: Displays a list of personal projects with titles, descriptions, and links.
+- **Responsive Design**: The website is designed to be responsive and look great on all devices.
+- **Dark Mode**: Toggle between light and dark mode for better readability.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Installation
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+To get started with the project, follow these steps:
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/astroweb.git
+   cd astroweb
+   ```
 
-## 🧞 Commands
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-All commands are run from the root of the project, from a terminal:
+3. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
 
-## 👀 Want to learn more?
+## Usage
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- **Home Page**: The home page includes a hero section, research, teaching, and contact information.
+- **Publications Page**: Accessible via the navigation menu, this page lists all publications.
+- **Projects Page**: Accessible via the navigation menu, this page lists all projects.
+- **Personal Projects Page**: Accessible via the navigation menu, this page lists all personal projects.
+
+## Live Demo
+
+You can view the live demo of the project [here](https://yourusername.github.io/astroweb).
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -am 'Add new feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to the Astro team for creating such an amazing framework.
+- Special thanks to [OpenWeather](https://openweathermap.org/) for providing weather data.
