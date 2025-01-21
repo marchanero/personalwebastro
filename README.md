@@ -6,6 +6,14 @@
 
 Welcome to the Astro Web Project! 🚀 This project is built using Astro, a modern framework for building fast, content-focused websites. The project includes pages for publications, projects, and personal projects, with a modern and responsive design.
 
+## Latest Developments
+
+- **New Pages**: Added pages for publications, projects, and personal projects.
+- **Navigation**: Updated the header to include navigation links to the new pages.
+- **API Endpoints**: Created API endpoints to fetch data for publications, projects, and personal projects.
+- **README Update**: Created and updated the README file with detailed project information.
+- **Scripts**: Added scripts to update the README and check project status.
+
 ## Project Structure
 
 The project is organized as follows:
@@ -112,3 +120,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Thanks to the Astro team for creating such an amazing framework. 🌟
 - Special thanks to [OpenWeather](https://openweathermap.org/) for providing weather data. ☀️
+
+## Scripts
+
+### Update README
+
+To update the README file with the latest project information, run:
+
+```bash
+./update-readme.sh
+```
+
+### Check Project
+
+To check for icons, links, and deployment status, run:
+
+```bash
+./check-project.sh
