@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getProjects } from '../components/Projects.astro';
+
+const projects = await getProjects();
+---
+<Layout>
+  <h1>Proyectos</h1>
+  <ul>
+    {projects.map((project) => (
+      <li key={project.id}>
+        <h2>{project.title}</h2>
+        <p>{project.description}</p>
+        <a href={project.link}>Ver proyecto</a>
+      </li>
+    ))}
+  </ul>
+</Layout>

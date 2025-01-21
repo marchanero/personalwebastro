@@ -15,6 +15,13 @@ import Contact from '../components/Contact.astro';
 		<Teaching />
 		<Contact />
 	</main>
+	<nav>
+		<ul>
+			<li><a href="/publications">Publications</a></li>
+			<li><a href="/projects">Projects</a></li>
+			<li><a href="/personal-projects">Personal Projects</a></li>
+		</ul>
+	</nav>
 	<footer class="py-8 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
 		<div class="container max-w-container mx-auto px-6">
 			<div class="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -25,9 +32,9 @@ import Contact from '../components/Contact.astro';
 					<span>Desarrollado con</span>
 					<span class="text-accent dark:text-accent-light">❤</span>
 					<span>usando</span>
-					<a 
-						href="https://astro.build" 
-						target="_blank" 
+					<a
+						href="https://astro.build"
+						target="_blank"
 						rel="noopener noreferrer"
 						class="text-gray-900 dark:text-white hover:text-accent dark:hover:text-accent-light transition-colors"
 					>

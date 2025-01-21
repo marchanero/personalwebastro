@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getPublications } from '../components/Publications.astro';
+
+const publications = await getPublications();
+---
+<Layout>
+  <h1>Publicaciones</h1>
+  <ul>
+    {publications.map((publication) => (
+      <li key={publication.id}>
+        <h2>{publication.title}</h2>
+        <p>{publication.description}</p>
+        <a href={publication.link}>Leer más</a>
+      </li>
+    ))}
+  </ul>
+</Layout>
