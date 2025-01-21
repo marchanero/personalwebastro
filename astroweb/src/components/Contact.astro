@@ -1,0 +1,129 @@
+---
+const contactInfo = {
+    email: "roberto.sanchez@uclm.es",
+    office: "Edificio Politécnico, UCLM",
+    address: "Campus Universitario, Albacete",
+    schedule: "Lunes a Viernes: 9:00 - 17:00"
+};
+
+const socialLinks = [
+    { name: 'Google Scholar', url: '#', icon: 'scholar' },
+    { name: 'ResearchGate', url: '#', icon: 'research' },
+    { name: 'LinkedIn', url: '#', icon: 'linkedin' }
+];
+---
+
+<section id="contacto" class="py-20 relative">
+    <div class="absolute inset-0 bg-dots-lg opacity-50 dark:opacity-20"></div>
+    
+    <div class="container max-w-container mx-auto px-6 relative">
+        <div class="text-center mb-16 animate-slide-up">
+            <h2 class="font-display text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Contacto
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                ¿Interesado en colaborar o tienes alguna pregunta? No dudes en contactarme.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <div class="space-y-6 animate-slide-up" style="animation-delay: 200ms">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 dark:bg-accent/20 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent dark:text-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Email</h3>
+                            <a href={`mailto:${contactInfo.email}`} class="text-accent hover:text-accent-dark dark:text-accent-light dark:hover:text-accent transition-colors">
+                                {contactInfo.email}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 dark:bg-accent/20 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent dark:text-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Oficina</h3>
+                            <p class="text-gray-600 dark:text-gray-400">{contactInfo.office}</p>
+                            <p class="text-gray-600 dark:text-gray-400">{contactInfo.address}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 dark:bg-accent/20 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent dark:text-accent-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Horario</h3>
+                            <p class="text-gray-600 dark:text-gray-400">{contactInfo.schedule}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="animate-slide-up" style="animation-delay: 400ms">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-accent to-accent-dark rounded-xl blur opacity-25"></div>
+                    <div class="relative bg-white dark:bg-gray-800 rounded-xl p-8">
+                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                            Conecta Conmigo
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-8">
+                            Para consultas académicas o relacionadas con investigación, 
+                            no dudes en contactarme por email o visitarme en mi oficina 
+                            durante el horario de atención.
+                        </p>
+                        <div class="flex flex-col gap-4">
+                            <a 
+                                href={`mailto:${contactInfo.email}`}
+                                class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-accent hover:bg-accent-dark dark:bg-accent-light dark:hover:bg-accent text-white font-medium transition-all duration-200 shadow-lg shadow-accent/25 dark:shadow-accent-light/25 hover:shadow-xl hover:shadow-accent/30 dark:hover:shadow-accent-light/30 hover:-translate-y-0.5"
+                            >
+                                Enviar Email
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <div class="flex justify-center gap-4 mt-4">
+                                {socialLinks.map(link => (
+                                    <a 
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-accent/10 dark:hover:bg-accent/20 text-gray-600 dark:text-gray-400 hover:text-accent dark:hover:text-accent-light transition-colors"
+                                        title={link.name}
+                                    >
+                                        <span class="sr-only">{link.name}</span>
+                                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                            {link.icon === 'scholar' && (
+                                                <path d="M12 0L0 6.25v11.5L12 24l12-6.25V6.25L12 0zm0 2.5L21 7.5v9L12 21.5 3 16.5v-9L12 2.5z"/>
+                                            )}
+                                            {link.icon === 'research' && (
+                                                <path d="M19.5 0h-15A4.5 4.5 0 000 4.5v15A4.5 4.5 0 004.5 24h15a4.5 4.5 0 004.5-4.5v-15A4.5 4.5 0 0019.5 0z"/>
+                                            )}
+                                            {link.icon === 'linkedin' && (
+                                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                            )}
+                                        </svg>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,111 @@
+---
+const researchAreas = [
+    {
+        title: "Procesamiento de Señales",
+        description: "Investigación en técnicas avanzadas de procesamiento de señales digitales, con énfasis en el análisis y optimización de algoritmos.",
+        icon: "📊"
+    },
+    {
+        title: "Análisis de Datos",
+        description: "Desarrollo de métodos innovadores para el análisis y la interpretación de datos complejos en tiempo real.",
+        icon: "🔍"
+    },
+    {
+        title: "Sistemas de Comunicación",
+        description: "Estudio y mejora de sistemas de comunicación digital, incluyendo modulación y codificación de señales.",
+        icon: "📡"
+    }
+];
+
+const publications = [
+    {
+        title: "Avances en Procesamiento de Señales Digitales",
+        journal: "Journal of Signal Processing",
+        year: "2023",
+        doi: "10.1234/jsp.2023.001"
+    },
+    {
+        title: "Técnicas Modernas de Análisis de Datos",
+        journal: "Data Analysis Quarterly",
+        year: "2022",
+        doi: "10.1234/daq.2022.002"
+    },
+    {
+        title: "Optimización de Sistemas de Comunicación",
+        journal: "Communications Technology Review",
+        year: "2022",
+        doi: "10.1234/ctr.2022.003"
+    }
+];
+---
+
+<section id="investigacion" class="py-20 relative">
+    <div class="absolute inset-0 bg-gray-50 dark:bg-gray-800/50 skew-y-3 -z-10"></div>
+    
+    <div class="container max-w-container mx-auto px-6">
+        <div class="text-center mb-16 animate-slide-up">
+            <h2 class="font-display text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Investigación
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Explorando las fronteras del procesamiento de señales y el análisis de datos
+                para crear soluciones innovadoras.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {researchAreas.map((area, index) => (
+                <div class={`group bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg hover:shadow-xl dark:shadow-gray-900/30 transition-all duration-300 hover:-translate-y-2 animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+                    <div class="text-4xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                        {area.icon}
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 group-hover:text-accent dark:group-hover:text-accent-light transition-colors">
+                        {area.title}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        {area.description}
+                    </p>
+                </div>
+            ))}
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <h3 class="font-display text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white animate-slide-up">
+                Publicaciones Recientes
+            </h3>
+            <div class="space-y-6">
+                {publications.map((pub, index) => (
+                    <div class={`group bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg dark:shadow-gray-900/30 transition-all duration-300 animate-slide-up`} style={`animation-delay: ${(index + 3) * 100}ms`}>
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-accent dark:group-hover:text-accent-light transition-colors">
+                                    {pub.title}
+                                </h4>
+                                <p class="text-gray-600 dark:text-gray-400 italic">
+                                    {pub.journal}
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <span class="px-3 py-1 rounded-full bg-accent/10 dark:bg-accent/20 text-accent dark:text-accent-light font-medium">
+                                    {pub.year}
+                                </span>
+                                <a 
+                                    href={`https://doi.org/${pub.doi}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center text-accent hover:text-accent-dark dark:text-accent-light dark:hover:text-accent transition-colors"
+                                >
+                                    <span class="mr-2">DOI</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,88 @@
+---
+const courses = [
+    {
+        name: "Procesamiento Digital de Señales",
+        level: "Grado en Ingeniería",
+        description: "Fundamentos y aplicaciones del procesamiento digital de señales, incluyendo análisis en frecuencia y diseño de filtros digitales."
+    },
+    {
+        name: "Sistemas de Comunicación",
+        level: "Grado en Ingeniería",
+        description: "Teoría y práctica de sistemas de comunicación modernos, abarcando modulación digital y técnicas de transmisión."
+    },
+    {
+        name: "Análisis Avanzado de Datos",
+        level: "Máster",
+        description: "Métodos avanzados de análisis de datos y señales, con aplicaciones en problemas reales de ingeniería."
+    }
+];
+
+const stats = [
+    { number: "10+", label: "Años de Experiencia" },
+    { number: "500+", label: "Estudiantes" },
+    { number: "15+", label: "Cursos Impartidos" },
+    { number: "3", label: "Áreas de Especialización" }
+];
+---
+
+<section id="docencia" class="py-20">
+    <div class="container max-w-container mx-auto px-6">
+        <div class="text-center mb-16 animate-slide-up">
+            <h2 class="font-display text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Docencia
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Formando a la próxima generación de ingenieros y profesionales en el campo 
+                del procesamiento de señales y las comunicaciones.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+            {stats.map((stat, index) => (
+                <div class={`text-center animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+                    <div class="font-display text-4xl font-bold text-accent dark:text-accent-light mb-2">
+                        {stat.number}
+                    </div>
+                    <div class="text-gray-600 dark:text-gray-400 text-sm">
+                        {stat.label}
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {courses.map((course, index) => (
+                <div class={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl dark:shadow-gray-900/30 transition-all duration-300 hover:-translate-y-2 animate-slide-up overflow-hidden`} style={`animation-delay: ${(index + 4) * 100}ms`}>
+                    <div class="absolute top-0 left-0 w-2 h-full bg-accent dark:bg-accent-light transform origin-left scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></div>
+                    <div class="p-8">
+                        <span class="inline-block px-4 py-2 rounded-full text-sm font-medium bg-accent/10 dark:bg-accent/20 text-accent dark:text-accent-light mb-4">
+                            {course.level}
+                        </span>
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 group-hover:text-accent dark:group-hover:text-accent-light transition-colors">
+                            {course.name}
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            {course.description}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <div class="max-w-3xl mx-auto animate-slide-up" style="animation-delay: 700ms">
+            <div class="relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-accent to-accent-dark rounded-xl blur opacity-25"></div>
+                <div class="relative bg-white dark:bg-gray-800 rounded-xl p-8">
+                    <h3 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+                        Filosofía de Enseñanza
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                        Mi enfoque de enseñanza combina fundamentos teóricos sólidos con aplicaciones prácticas del mundo real. 
+                        Creo en crear un ambiente de aprendizaje interactivo donde los estudiantes puedan desarrollar tanto 
+                        conocimientos técnicos como habilidades de pensamiento crítico.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
