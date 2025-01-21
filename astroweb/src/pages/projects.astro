@@ -1,18 +1,67 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getProjects } from '../components/Projects.astro';
+import { getProjects } from '../api/projects';
 
-const projects = await getProjects();
+const projects = getProjects();
 ---
-<Layout>
-  <h1>Proyectos</h1>
-  <ul>
-    {projects.map((project) => (
-      <li key={project.id}>
-        <h2>{project.title}</h2>
-        <p>{project.description}</p>
-        <a href={project.link}>Ver proyecto</a>
-      </li>
-    ))}
-  </ul>
+
+<Layout title="Proyectos de Investigación - Roberto Sanchez Reolid">
+	<div class="container max-w-container py-12">
+		<h1 class="heading-1 mb-8 animate-fade-in">Proyectos de Investigación</h1>
+		
+		<div class="grid gap-8 animate-slide-up">
+			{projects.map(project => (
+				<article class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200/10 dark:border-gray-700/30">
+					<header class="mb-4">
+						<h2 class="heading-2 mb-2">{project.title}</h2>
+						<div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+							<span class="flex items-center">
+								<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+								</svg>
+								{project.period}
+							</span>
+							<span class="flex items-center">
+								<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+								</svg>
+								{project.role}
+							</span>
+						</div>
+					</header>
+
+					<p class="text-gray-700 dark:text-gray-300 mb-6">
+						{project.description}
+					</p>
+
+					<div class="mb-6">
+						<h3 class="heading-3 text-lg mb-3">Tecnologías</h3>
+						<div class="flex flex-wrap gap-2">
+							{project.technologies.map(tech => (
+								<span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100 rounded-full text-sm">
+									{tech}
+								</span>
+							))}
+						</div>
+					</div>
+
+					<div class="mb-6">
+						<h3 class="heading-3 text-lg mb-3">Logros</h3>
+						<ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+							{project.achievements.map(achievement => (
+								<li>{achievement}</li>
+							))}
+						</ul>
+					</div>
+
+					<footer class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+						<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+						</svg>
+						Financiado por: {project.funding}
+					</footer>
+				</article>
+			))}
+		</div>
+	</div>
 </Layout>

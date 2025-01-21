@@ -6,13 +6,28 @@ export default {
 		extend: {
 			colors: {
 				accent: {
+					lighter: '#7dd3fc',
 					light: '#22d3ee',
 					DEFAULT: '#0891b2',
-					dark: '#0e7490'
+					dark: '#0e7490',
+					darker: '#155e75'
 				},
 				glass: {
-					light: 'rgba(255, 255, 255, 0.7)',
-					dark: 'rgba(17, 24, 39, 0.7)'
+					light: 'rgba(255, 255, 255, 0.85)',
+					dark: 'rgba(17, 24, 39, 0.85)'
+				},
+				primary: {
+					50: '#f0f9ff',
+					100: '#e0f2fe',
+					200: '#bae6fd',
+					300: '#7dd3fc',
+					400: '#38bdf8',
+					500: '#0ea5e9',
+					600: '#0284c7',
+					700: '#0369a1',
+					800: '#075985',
+					900: '#0c4a6e',
+					950: '#082f49',
 				}
 			},
 			fontFamily: {
@@ -45,8 +60,8 @@ export default {
 				},
 			},
 			backgroundImage: {
-				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-dots': 'radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px)',
+				'dots-light': 'radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px)',
+				'dots-dark': 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
 			},
 			backgroundSize: {
 				'dots-sm': '20px 20px',
