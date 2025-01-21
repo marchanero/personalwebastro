@@ -1,6 +1,6 @@
 # Astro Web Project
 
-![Astro](https://astro.build/assets/logo.png)
+![Astro](https://astro.build/assets/logo-astro.png)
 
 ## Introduction
 
