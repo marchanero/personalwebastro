@@ -1,6 +1,6 @@
 # Astro Web Project
 
-![Astro](https://astro.build/assets/logo-astro.png)
+![Astro](https://raw.githubusercontent.com/withastro/astro/main/assets/social/banner.png)
 
 ## Introduction
 
@@ -89,6 +89,11 @@ To get started with the project, follow these steps:
 4. **Build for production**:
    ```bash
    npm run build
+   ```
+
+5. **Run scripts simultaneously**:
+   ```bash
+   ./update-readme.sh & ./check-project.sh
    ```
 
 ## Usage
