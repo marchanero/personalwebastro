@@ -1,28 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import Research from '../components/Research.astro';
 import Teaching from '../components/Teaching.astro';
 import Contact from '../components/Contact.astro';
+
+const seoMetadata = {
+	title: "Roberto Sánchez Reolid - Profesor & Investigador en UCLM",
+	description: "Sitio web personal de Roberto Sánchez Reolid, Profesor en UCLM e Investigador en Procesamiento de Señales. Descubre mi investigación, publicaciones y proyectos.",
+	openGraph: {
+		basic: {
+			title: "Roberto Sánchez Reolid - Profesor & Investigador",
+			type: "website",
+			image: "/og-image.jpg",
+		},
+		optional: {
+			description: "Profesor en UCLM e Investigador en Procesamiento de Señales",
+			locale: "es_ES",
+		}
+	}
+};
 ---
 
-<Layout>
-	<Header />
-	<main>
+<Layout title={seoMetadata.title} description={seoMetadata.description}>
+	<main class="flex flex-col min-h-screen">
 		<Hero />
 		<Research />
 		<Teaching />
 		<Contact />
 	</main>
-	<nav>
-		<ul>
-			<li><a href="/publications">Publications</a></li>
-			<li><a href="/projects">Projects</a></li>
-			<li><a href="/personal-projects">Personal Projects</a></li>
-		</ul>
-	</nav>
-	<footer class="py-8 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+	<footer class="py-8 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-auto">
 		<div class="container max-w-container mx-auto px-6">
 			<div class="flex flex-col md:flex-row justify-between items-center gap-4">
 				<p class="text-gray-600 dark:text-gray-400 text-sm">
