@@ -1,144 +1,166 @@
-# Astro Web Project
+# Personal Web App
 
-![Astro](https://raw.githubusercontent.com/withastro/astro/main/assets/social/banner.png)
+Esta aplicación consta de tres servicios principales:
 
-## Introduction
+- Frontend (Astro)
+- CMS (Strapi)
+- API de búsqueda (SerpAPI)
 
-Welcome to the Astro Web Project! 🚀 This project is built using Astro, a modern framework for building fast, content-focused websites. The project includes pages for publications, projects, and personal projects, with a modern and responsive design.
+## Requisitos
 
-## Latest Developments
+- Docker
+- Docker Compose
+- Node.js 18 o superior (para desarrollo local)
 
-- **New Pages**: Added pages for publications, projects, and personal projects.
-- **Navigation**: Updated the header to include navigation links to the new pages.
-- **API Endpoints**: Created API endpoints to fetch data for publications, projects, and personal projects.
-- **README Update**: Created and updated the README file with detailed project information.
-- **Scripts**: Added scripts to update the README and check project status.
-
-## Project Structure
-
-The project is organized as follows:
+## Estructura del Proyecto
 
 ```
-astroweb/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── assets/
-│   │   ├── astro.svg
-│   │   └── background.svg
-│   ├── components/
-│   │   ├── Contact.astro
-│   │   ├── Header.astro
-│   │   ├── Hero.astro
-│   │   ├── Publications.astro
-│   │   ├── Projects.astro
-│   │   ├── PersonalProjects.astro
-│   │   ├── Research.astro
-│   │   ├── Teaching.astro
-│   │   ├── ThemeToggle.astro
-│   │   └── Welcome.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── pages/
-│   │   ├── index.astro
-│   │   ├── publications.astro
-│   │   ├── projects.astro
-│   │   └── personal-projects.astro
-│   ├── styles/
-│   │   └── base.css
-│   └── api/
-│       ├── publications.js
-│       ├── projects.js
-│       └── personal-projects.js
-├── astro.config.mjs
-├── package.json
-├── package-lock.json
-├── postcss.config.cjs
-├── tailwind.config.mjs
-└── tsconfig.json
+.
+├── astroweb/         # Frontend en Astro
+├── strapi-cms/       # CMS Strapi
+└── serpapi/          # Servicio de SerpAPI
 ```
 
-## Features
+## Configuración para Despliegue Local
 
-- **Publications Page**: Displays a list of publications with titles, descriptions, and links. 📚
-- **Projects Page**: Displays a list of projects with titles, descriptions, and links. 🏗️
-- **Personal Projects Page**: Displays a list of personal projects with titles, descriptions, and links. 👨‍💻
-- **Responsive Design**: The website is designed to be responsive and look great on all devices. 📱
-- **Dark Mode**: Toggle between light and dark mode for better readability. 🌙
+1. Crea un archivo `.env` basado en `.env.example`:
+```bash
+cp .env.example .env
+```
 
-## Installation
+2. Edita el archivo `.env` y configura las siguientes variables:
+   - Credenciales de PostgreSQL
+   - Claves secretas de Strapi
+   - Clave de API de SerpAPI
+   - URLs de los servicios
 
-To get started with the project, follow these steps:
+## Despliegue Local
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/astroweb.git
-   cd astroweb
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Build for production**:
-   ```bash
-   npm run build
-   ```
-
-5. **Run scripts simultaneously**:
-   ```bash
-   ./update-readme.sh & ./check-project.sh
-   ```
-
-## Usage
-
-- **Home Page**: The home page includes a hero section, research, teaching, and contact information. 🏠
-- **Publications Page**: Accessible via the navigation menu, this page lists all publications. 📚
-- **Projects Page**: Accessible via the navigation menu, this page lists all projects. 🏗️
-- **Personal Projects Page**: Accessible via the navigation menu, this page lists all personal projects. 👨‍💻
-
-## Live Demo
-
-You can view the live demo of the project [here](https://yourusername.github.io/astroweb).
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Thanks to the Astro team for creating such an amazing framework. 🌟
-- Special thanks to [OpenWeather](https://openweathermap.org/) for providing weather data. ☀️
-
-## Scripts
-
-### Update README
-
-To update the README file with the latest project information, run:
+El proyecto incluye un script de despliegue que automatiza todo el proceso:
 
 ```bash
-./update-readme.sh
+./deploy.sh
 ```
 
-### Check Project
+Este script realizará las siguientes acciones:
+1. Verificará la existencia del archivo `.env`
+2. Construirá las imágenes de Docker
+3. Levantará todos los servicios
+4. Mostrará el estado final del despliegue
 
-To check for icons, links, and deployment status, run:
+## Configuración de CI/CD
 
+Para el despliegue automático a través de GitHub Actions, necesitas configurar los siguientes secretos en tu repositorio:
+
+### Secretos Requeridos
+
+1. Secretos de Base de Datos:
+   - `POSTGRES_DB`: Nombre de la base de datos
+   - `POSTGRES_USER`: Usuario de PostgreSQL
+   - `POSTGRES_PASSWORD`: Contraseña de PostgreSQL
+
+2. Secretos de Strapi:
+   - `JWT_SECRET`: Clave secreta para JWT
+   - `ADMIN_JWT_SECRET`: Clave secreta para JWT del admin
+   - `APP_KEYS`: Claves de aplicación (separadas por comas)
+   - `API_TOKEN_SALT`: Salt para tokens de API
+
+3. Secretos de API:
+   - `SERPAPI_KEY`: Clave de API de SerpAPI
+
+4. Secretos de Despliegue:
+   - `GITHUB_TOKEN`: Token de GitHub (automáticamente proporcionado)
+   - `ENV_FILE`: Contenido completo del archivo .env para producción
+
+### Configuración de Secretos
+
+1. Ve a la configuración de tu repositorio en GitHub
+2. Navega a "Settings" > "Secrets and variables" > "Actions"
+3. Haz clic en "New repository secret"
+4. Añade cada uno de los secretos mencionados arriba
+
+## URLs de Acceso
+
+Después del despliegue, los servicios estarán disponibles en:
+
+- Frontend: http://localhost
+- Strapi CMS: http://localhost:1337
+- SerpAPI: http://localhost:3001
+
+## Mantenimiento
+
+### Logs
 ```bash
-./check-project.sh
+# Ver logs de todos los servicios
+docker-compose logs -f
+
+# Ver logs de un servicio específico
+docker-compose logs -f [frontend|strapi|serpapi]
+```
+
+### Gestión de Servicios
+```bash
+# Detener servicios
+docker-compose down
+
+# Reiniciar servicios
+docker-compose restart
+
+# Reconstruir servicios
+docker-compose up -d --build
+```
+
+## Desarrollo Local
+
+Para desarrollo local, cada servicio puede ejecutarse independientemente:
+
+### Frontend (Astro)
+```bash
+cd astroweb
+npm install
+npm run dev
+```
+
+### Strapi CMS
+```bash
+cd strapi-cms
+npm install
+npm run develop
+```
+
+### SerpAPI Service
+```bash
+cd serpapi
+npm install
+node index.mjs
+```
+
+## Backups
+
+La base de datos y los archivos de Strapi se almacenan en volúmenes de Docker:
+- `postgres-data`: Datos de PostgreSQL
+- `strapi-uploads`: Archivos subidos a Strapi
+
+Para realizar backups:
+```bash
+# Backup de la base de datos
+docker-compose exec postgres pg_dump -U strapi > backup.sql
+
+# Backup de archivos de Strapi
+docker cp $(docker-compose ps -q strapi):/app/public/uploads ./backups/uploads
+```
+
+## CI/CD Pipeline
+
+El proyecto utiliza GitHub Actions para CI/CD con los siguientes jobs:
+
+1. **test-frontend**: Ejecuta tests del frontend
+2. **test-strapi**: Ejecuta tests de Strapi
+3. **test-serpapi**: Preparado para tests de SerpAPI
+4. **lint**: Verifica el código con ESLint
+5. **build-and-push**: Construye y publica las imágenes Docker
+6. **deploy**: Despliega la aplicación en el servidor
+
+El pipeline se ejecuta automáticamente en:
+- Push a la rama main
+- Pull requests a la rama main

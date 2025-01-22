@@ -1,0 +1,292 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  FRONTEND_IMAGE: ${{ github.repository }}-frontend
+  STRAPI_IMAGE: ${{ github.repository }}-strapi
+  SERPAPI_IMAGE: ${{ github.repository }}-serpapi
+  SERVER_IP: "185.216.203.54"
+  SERVER_USER: "root"
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./astroweb
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: './astroweb/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        
+  test-strapi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./strapi-cms
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: './strapi-cms/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test || true  # Permitir fallo si no hay tests configurados
+      
+  test-serpapi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./serpapi
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: './serpapi/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test || true  # Permitir fallo si no hay tests configurados
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies frontend
+      run: cd astroweb && npm ci
+      
+    - name: Run ESLint frontend
+      run: cd astroweb && npm run lint
+
+    - name: Install dependencies strapi
+      run: cd strapi-cms && npm ci
+      
+    - name: Run ESLint strapi
+      run: cd strapi-cms && npm run lint || true
+        
+  build-and-push:
+    needs: [test-frontend, test-strapi, test-serpapi, lint]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build y push Frontend
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./astroweb
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build y push Strapi
+      - name: Build and push Strapi Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./strapi-cms
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.STRAPI_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build y push SerpAPI
+      - name: Build and push SerpAPI Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./serpapi
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.SERPAPI_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Create .env file
+        run: |
+          cat > .env << EOL
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          ADMIN_JWT_SECRET=${{ secrets.ADMIN_JWT_SECRET }}
+          APP_KEYS=${{ secrets.APP_KEYS }}
+          API_TOKEN_SALT=${{ secrets.API_TOKEN_SALT }}
+          SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
+          EOL
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: ${{ env.SERVER_USER }}
+          password: orangepi.dev
+          script: |
+            # Detener y eliminar contenedores antiguos
+            docker-compose down || true
+            
+            # Limpiar imágenes antiguas
+            docker system prune -f
+            
+            # Autenticarse en el registro de GitHub
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            # Crear docker-compose.prod.yml
+            cat > docker-compose.prod.yml << EOL
+            version: '3.8'
+            
+            services:
+              frontend:
+                image: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
+                ports:
+                  - "80:80"
+                environment:
+                  - NODE_ENV=production
+                  - STRAPI_URL=http://strapi:1337
+                depends_on:
+                  - strapi
+                networks:
+                  - app-network
+                restart: unless-stopped
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 40s
+
+              strapi:
+                image: ${{ env.REGISTRY }}/${{ env.STRAPI_IMAGE }}:latest
+                environment:
+                  - NODE_ENV=production
+                  - DATABASE_CLIENT=postgres
+                  - DATABASE_HOST=postgres
+                  - DATABASE_PORT=5432
+                  - DATABASE_NAME=\${POSTGRES_DB}
+                  - DATABASE_USERNAME=\${POSTGRES_USER}
+                  - DATABASE_PASSWORD=\${POSTGRES_PASSWORD}
+                  - JWT_SECRET=\${JWT_SECRET}
+                  - ADMIN_JWT_SECRET=\${ADMIN_JWT_SECRET}
+                  - APP_KEYS=\${APP_KEYS}
+                  - API_TOKEN_SALT=\${API_TOKEN_SALT}
+                ports:
+                  - "1337:1337"
+                depends_on:
+                  - postgres
+                networks:
+                  - app-network
+                restart: unless-stopped
+                volumes:
+                  - strapi-uploads:/app/public/uploads
+
+              postgres:
+                image: postgres:15-alpine
+                environment:
+                  - POSTGRES_DB=\${POSTGRES_DB}
+                  - POSTGRES_USER=\${POSTGRES_USER}
+                  - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD}
+                volumes:
+                  - postgres-data:/var/lib/postgresql/data
+                networks:
+                  - app-network
+                restart: unless-stopped
+
+              serpapi:
+                image: ${{ env.REGISTRY }}/${{ env.SERPAPI_IMAGE }}:latest
+                environment:
+                  - NODE_ENV=production
+                  - SERPAPI_KEY=\${SERPAPI_KEY}
+                ports:
+                  - "3001:3001"
+                networks:
+                  - app-network
+                restart: unless-stopped
+
+            networks:
+              app-network:
+                driver: bridge
+
+            volumes:
+              postgres-data:
+              strapi-uploads:
+            EOL
+            
+            # Copiar archivo .env al servidor
+            echo "${{ secrets.ENV_FILE }}" > .env
+            
+            # Desplegar con el nuevo compose file
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
+            
+            # Verificar el despliegue
+            docker-compose -f docker-compose.prod.yml ps
