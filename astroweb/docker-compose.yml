@@ -1,12 +1,40 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  # Servicio de desarrollo
+  dev:
+    build:
+      context: .
+      target: builder
+    volumes:
+      - .:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+    command: npm run dev
     environment:
       - NODE_ENV=development
+    networks:
+      - astroweb-network
+
+  # Servicio de producción
+  prod:
+    build:
+      context: .
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - astroweb-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  astroweb-network:
+    driver: bridge

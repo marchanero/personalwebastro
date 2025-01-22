@@ -2,48 +2,128 @@
 import '../styles/base.css';
 import Header from '../components/Header.astro';
 
+interface OpenGraph {
+    basic?: {
+        title: string;
+        type: string;
+        image: string;
+        url?: string;
+    };
+    optional?: {
+        description?: string;
+        locale?: string;
+        siteName?: string;
+    };
+    article?: {
+        author?: string;
+        tags?: string[];
+    };
+}
+
+interface Twitter {
+    card?: string;
+    site?: string;
+    creator?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+}
+
 interface Props {
-	title?: string;
-	description?: string;
+    title?: string;
+    description?: string;
+    openGraph?: OpenGraph;
+    twitter?: Twitter;
 }
 
 const {
-	title = "Roberto Sanchez Reolid - Professor & Researcher",
-	description = "Personal website of Roberto Sanchez Reolid, Professor at UCLM and Signal Processing Researcher"
+    title = "Roberto Sanchez Reolid - Professor & Researcher",
+    description = "Personal website of Roberto Sanchez Reolid, Professor at UCLM and Signal Processing Researcher",
+    openGraph,
+    twitter
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
-		<title>{title}</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<link href="https://api.fontshare.com/v2/css?f[]=cal-sans@400,700&display=swap" rel="stylesheet">
-		<script is:inline>
-			const theme = (() => {
-				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-					return localStorage.getItem('theme');
-				}
-				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-					return 'dark';
-				}
-				return 'light';
-			})();
-			if (theme === 'dark') document.documentElement.classList.add('dark');
-		</script>
-	</head>
-	<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased selection:bg-accent-light selection:bg-opacity-20 selection:text-accent-dark dark:selection:text-accent-light">
-		<div class="fixed inset-0 bg-dots-light dark:bg-dots-dark bg-dots-lg opacity-50 dark:opacity-20 pointer-events-none"></div>
-		<Header />
-		<main class="pt-header">
-			<slot />
-		</main>
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalURL} />
+        
+        <!-- Open Graph / Facebook -->
+        {openGraph?.basic && (
+            <>
+                <meta property="og:title" content={openGraph.basic.title} />
+                <meta property="og:type" content={openGraph.basic.type} />
+                <meta property="og:image" content={openGraph.basic.image} />
+                <meta property="og:url" content={openGraph.basic.url || canonicalURL} />
+            </>
+        )}
+        {openGraph?.optional && (
+            <>
+                {openGraph.optional.description && 
+                    <meta property="og:description" content={openGraph.optional.description} />
+                }
+                {openGraph.optional.locale && 
+                    <meta property="og:locale" content={openGraph.optional.locale} />
+                }
+                {openGraph.optional.siteName && 
+                    <meta property="og:site_name" content={openGraph.optional.siteName} />
+                }
+            </>
+        )}
+        {openGraph?.article && (
+            <>
+                {openGraph.article.author && 
+                    <meta property="article:author" content={openGraph.article.author} />
+                }
+                {openGraph.article.tags?.map(tag => (
+                    <meta property="article:tag" content={tag} />
+                ))}
+            </>
+        )}
+
+        <!-- Twitter -->
+        {twitter && (
+            <>
+                <meta name="twitter:card" content={twitter.card || "summary_large_image"} />
+                {twitter.site && <meta name="twitter:site" content={twitter.site} />}
+                {twitter.creator && <meta name="twitter:creator" content={twitter.creator} />}
+                <meta name="twitter:title" content={twitter.title || title} />
+                <meta name="twitter:description" content={twitter.description || description} />
+                {twitter.image && <meta name="twitter:image" content={twitter.image} />}
+            </>
+        )}
+
+        <title>{title}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://api.fontshare.com/v2/css?f[]=cal-sans@400,700&display=swap" rel="stylesheet">
+        <script is:inline>
+            const theme = (() => {
+                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
+                }
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            })();
+            if (theme === 'dark') document.documentElement.classList.add('dark');
+        </script>
+    </head>
+    <body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased selection:bg-accent-light selection:bg-opacity-20 selection:text-accent-dark dark:selection:text-accent-light">
+        <div class="fixed inset-0 bg-dots-light dark:bg-dots-dark bg-dots-lg opacity-50 dark:opacity-20 pointer-events-none"></div>
+        <Header />
+        <main class="pt-header">
+            <slot />
+        </main>
+    </body>
 </html>

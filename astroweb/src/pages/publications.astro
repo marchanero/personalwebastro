@@ -1,165 +1,96 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getPublications } from '../api/publications';
-import PublicationMetrics from '../components/PublicationMetrics.astro';
+import PublicationsList from '../components/Publications.astro';
 
-const publications = getPublications();
-const journalPublications = publications.filter(pub => pub.type === 'journal');
-const conferencePublications = publications.filter(pub => pub.type === 'conference');
+const seoMetadata = {
+    title: "Publicaciones Científicas | Roberto Sánchez Reolid",
+    description: "Explora mis publicaciones científicas en el campo del procesamiento de señales, deep learning y bioingeniería. Artículos en revistas y conferencias internacionales.",
+    openGraph: {
+        basic: {
+            title: "Publicaciones Científicas - Roberto Sánchez Reolid",
+            type: "website",
+            image: "/og-publications.jpg", // Asegúrate de tener esta imagen en tu carpeta public
+        },
+        optional: {
+            description: "Publicaciones científicas en procesamiento de señales y deep learning",
+            locale: "es_ES",
+            siteName: "Roberto Sánchez Reolid"
+        },
+        article: {
+            author: "Roberto Sánchez Reolid",
+            tags: ["Investigación", "Publicaciones", "Deep Learning", "Procesamiento de Señales"]
+        }
+    },
+    twitter: {
+        card: "summary_large_image",
+        site: "@rsanchezreolid", // Reemplaza con tu usuario de Twitter
+        creator: "@rsanchezreolid",
+        title: "Publicaciones Científicas - Roberto Sánchez Reolid",
+        description: "Explora mis publicaciones científicas en procesamiento de señales y deep learning",
+        image: "/og-publications.jpg"
+    }
+};
 ---
 
-<Layout title="Publicaciones - Roberto Sanchez Reolid">
-	<div class="container max-w-container py-12">
-		<h1 class="heading-1 mb-8 animate-fade-in">Publicaciones Científicas</h1>
-		
-		<!-- Métricas -->
-		<PublicationMetrics publications={publications} />
-		
-		<div class="space-y-12 animate-slide-up">
-			<!-- Artículos de Revista -->
-			<section>
-				<h2 class="heading-2 mb-6">Artículos en Revistas</h2>
-				<div class="space-y-6">
-					{journalPublications.map(publication => (
-						<article class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200/10 dark:border-gray-700/30">
-							<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-								{publication.title}
-							</h3>
-							
-							<div class="flex flex-wrap gap-2 mb-4 text-sm text-gray-600 dark:text-gray-400">
-								<span class="flex items-center">
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-									</svg>
-									{publication.journal}
-								</span>
-								<span class="flex items-center">
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-									</svg>
-									{publication.year}
-								</span>
-								{publication.citations && (
-									<span class="flex items-center">
-										<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-										</svg>
-										{publication.citations} citas
-									</span>
-								)}
-							</div>
+<Layout 
+    title={seoMetadata.title}
+    description={seoMetadata.description}
+>
+    <div class="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+        <div class="pt-32 pb-12">
+            <div class="container max-w-container mx-auto px-6">
+                <div class="max-w-4xl">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                        Publicaciones Científicas
+                    </h1>
+                    <p class="text-xl text-gray-600 dark:text-gray-400">
+                        Explora mis contribuciones a la investigación en procesamiento de señales, 
+                        deep learning y bioingeniería. Utiliza los filtros para encontrar 
+                        publicaciones específicas por año, tipo o tema.
+                    </p>
+                </div>
+            </div>
+        </div>
 
-							<div class="mb-4">
-								<p class="font-medium text-gray-700 dark:text-gray-300">Autores:</p>
-								<p class="text-gray-600 dark:text-gray-400">{publication.authors.join(', ')}</p>
-							</div>
+        <PublicationsList />
 
-							<div class="mb-4">
-								<p class="text-gray-700 dark:text-gray-300">{publication.abstract}</p>
-							</div>
-
-							<div class="mb-4">
-								<div class="flex flex-wrap gap-2">
-									{publication.keywords.map(keyword => (
-										<span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100 rounded-full text-sm">
-											{keyword}
-										</span>
-									))}
-								</div>
-							</div>
-
-							<footer class="flex flex-wrap gap-4 text-sm">
-								<div class="text-gray-600 dark:text-gray-400">
-									Vol. {publication.volume}, Issue {publication.issue}, pp. {publication.pages}
-								</div>
-								<a
-									href={`https://doi.org/${publication.doi}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="inline-flex items-center text-accent hover:text-accent-dark dark:text-accent-light dark:hover:text-accent-lighter transition-colors"
-								>
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-									</svg>
-									DOI
-								</a>
-							</footer>
-						</article>
-					))}
-				</div>
-			</section>
-
-			<!-- Conferencias -->
-			<section>
-				<h2 class="heading-2 mb-6">Artículos en Conferencias</h2>
-				<div class="space-y-6">
-					{conferencePublications.map(publication => (
-						<article class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200/10 dark:border-gray-700/30">
-							<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-								{publication.title}
-							</h3>
-							
-							<div class="flex flex-wrap gap-2 mb-4 text-sm text-gray-600 dark:text-gray-400">
-								<span class="flex items-center">
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-									</svg>
-									{publication.conference}
-								</span>
-								<span class="flex items-center">
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-									</svg>
-									{publication.location}
-								</span>
-								<span class="flex items-center">
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-									</svg>
-									{publication.year}
-								</span>
-							</div>
-
-							<div class="mb-4">
-								<p class="font-medium text-gray-700 dark:text-gray-300">Autores:</p>
-								<p class="text-gray-600 dark:text-gray-400">{publication.authors.join(', ')}</p>
-							</div>
-
-							<div class="mb-4">
-								<p class="text-gray-700 dark:text-gray-300">{publication.abstract}</p>
-							</div>
-
-							<div class="mb-4">
-								<div class="flex flex-wrap gap-2">
-									{publication.keywords.map(keyword => (
-										<span class="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100 rounded-full text-sm">
-											{keyword}
-										</span>
-									))}
-								</div>
-							</div>
-
-							<footer class="flex flex-wrap gap-4 text-sm">
-								<div class="text-gray-600 dark:text-gray-400">
-									pp. {publication.pages}
-								</div>
-								<a
-									href={`https://doi.org/${publication.doi}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="inline-flex items-center text-accent hover:text-accent-dark dark:text-accent-light dark:hover:text-accent-lighter transition-colors"
-								>
-									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-									</svg>
-									DOI
-								</a>
-							</footer>
-						</article>
-					))}
-				</div>
-			</section>
-		</div>
-	</div>
+        <div class="py-12">
+            <div class="container max-w-container mx-auto px-6">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                        Métricas de Investigación
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-accent dark:text-accent-light mb-2">
+                                {/* Calcular total de publicaciones */}
+                                30+
+                            </div>
+                            <div class="text-gray-600 dark:text-gray-400">
+                                Publicaciones Totales
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-accent dark:text-accent-light mb-2">
+                                {/* Calcular total de citas */}
+                                250+
+                            </div>
+                            <div class="text-gray-600 dark:text-gray-400">
+                                Citaciones
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-accent dark:text-accent-light mb-2">
+                                {/* Calcular h-index */}
+                                8
+                            </div>
+                            <div class="text-gray-600 dark:text-gray-400">
+                                H-Index
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </Layout>

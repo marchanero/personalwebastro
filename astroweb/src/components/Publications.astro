@@ -1,9 +1,331 @@
 ---
 import { getPublications } from '../api/publications';
 
-export async function getPublications() {
-  const response = await fetch('http://localhost:3000/api/publications');
-  const data = await response.json();
-  return data;
-}
+const initialPublications = await getPublications();
+const years = [...new Set(initialPublications.map(pub => pub.year))].sort((a, b) => b - a);
+const keywords = [...new Set(initialPublications.flatMap(pub => pub.keywords))].sort();
 ---
+
+<section id="publicaciones" class="py-20">
+    <div class="container max-w-container mx-auto px-6">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">
+            Publicaciones Científicas
+        </h2>
+
+        <!-- Filtros -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-wrap gap-4">
+                <select id="yearFilter" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                    <option value="">Todos los años</option>
+                    {years.map(year => (
+                        <option value={year}>{year}</option>
+                    ))}
+                </select>
+
+                <select id="typeFilter" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                    <option value="">Todos los tipos</option>
+                    <option value="journal">Artículos de Journal</option>
+                    <option value="conference">Artículos de Conferencia</option>
+                </select>
+
+                <select id="keywordFilter" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                    <option value="">Todas las palabras clave</option>
+                    {keywords.map(keyword => (
+                        <option value={keyword}>{keyword}</option>
+                    ))}
+                </select>
+
+                <select id="sortBy" class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                    <option value="year">Ordenar por Año</option>
+                    <option value="citations">Ordenar por Citaciones</option>
+                </select>
+
+                <div class="flex items-center gap-2">
+                    <button
+                        id="orderToggle"
+                        class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        aria-label="Cambiar orden"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z" />
+                        </svg>
+                    </button>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Buscar en publicaciones..."
+                        class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent dark:focus:ring-accent-light"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Publicaciones -->
+        <div id="publicationsList" class="space-y-8">
+            {initialPublications.map(pub => (
+                <article class="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                {pub.title}
+                            </h3>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium bg-accent/10 text-accent dark:bg-accent-light/10 dark:text-accent-light">
+                                {pub.type === 'journal' ? 'Journal' : 'Conferencia'}
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            {pub.authors.map((author, index) => (
+                                <>
+                                    <span>{author}</span>
+                                    {index < pub.authors.length - 1 && <span>•</span>}
+                                </>
+                            ))}
+                        </div>
+
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            {pub.type === 'journal' ? (
+                                <p>
+                                    {pub.journal}, {pub.year}, Vol. {pub.volume}, Issue {pub.issue}, pp. {pub.pages}
+                                </p>
+                            ) : (
+                                <p>
+                                    {pub.conference}, {pub.location}, {pub.year}, pp. {pub.pages}
+                                </p>
+                            )}
+                        </div>
+
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {pub.abstract}
+                        </p>
+
+                        <div class="flex flex-wrap gap-2">
+                            {pub.keywords.map(keyword => (
+                                <span class="px-2 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                    {keyword}
+                                </span>
+                            ))}
+                        </div>
+
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <span>{pub.citations} citaciones</span>
+                            </div>
+                            <a 
+                                href={`https://doi.org/${pub.doi}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1 text-sm text-accent dark:text-accent-light hover:underline"
+                            >
+                                Ver publicación
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+</section>
+
+<script>
+    interface Publication {
+        id: number;
+        title: string;
+        authors: string[];
+        journal?: string;
+        conference?: string;
+        location?: string;
+        year: number;
+        volume?: string;
+        issue?: string;
+        pages: string;
+        doi: string;
+        abstract: string;
+        keywords: string[];
+        citations: number;
+        type: 'journal' | 'conference';
+    }
+
+    let currentPublications: Publication[] = [];
+    let currentOrder: 'asc' | 'desc' = 'desc';
+    let searchTimeout: number | null = null;
+    let currentFilters: Record<string, string> = {};
+    
+    async function updatePublications(filters: Record<string, string> = {}) {
+        const publicationsList = document.getElementById('publicationsList');
+        if (!publicationsList) return;
+
+        currentFilters = { ...currentFilters, ...filters };
+
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'text-center py-8';
+        loadingDiv.innerHTML = `
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-accent border-t-transparent"></div>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Cargando publicaciones...</p>
+        `;
+
+        publicationsList.innerHTML = '';
+        publicationsList.appendChild(loadingDiv);
+
+        try {
+            const response = await fetch('/api/publications?' + new URLSearchParams({
+                ...currentFilters,
+                order: currentOrder
+            }));
+            currentPublications = await response.json();
+            renderPublications();
+        } catch (error) {
+            console.error('Error fetching publications:', error);
+            if (publicationsList) {
+                publicationsList.innerHTML = `
+                    <div class="text-center py-8 text-red-600 dark:text-red-400">
+                        Error al cargar las publicaciones. Por favor, intente nuevamente.
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function renderPublications() {
+        const publicationsList = document.getElementById('publicationsList');
+        if (!publicationsList) return;
+
+        if (currentPublications.length === 0) {
+            publicationsList.innerHTML = `
+                <div class="text-center py-8 text-gray-600 dark:text-gray-400">
+                    No se encontraron publicaciones que coincidan con los filtros seleccionados.
+                </div>
+            `;
+            return;
+        }
+
+        publicationsList.innerHTML = currentPublications.map(pub => `
+            <article class="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            ${pub.title}
+                        </h3>
+                        <span class="px-3 py-1 rounded-full text-sm font-medium bg-accent/10 text-accent dark:bg-accent-light/10 dark:text-accent-light">
+                            ${pub.type === 'journal' ? 'Journal' : 'Conferencia'}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        ${pub.authors.map((author, index) => `
+                            <span>${author}</span>
+                            ${index < pub.authors.length - 1 ? '<span>•</span>' : ''}
+                        `).join('')}
+                    </div>
+
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                        ${pub.type === 'journal'
+                            ? `${pub.journal}, ${pub.year}, Vol. ${pub.volume}, Issue ${pub.issue}, pp. ${pub.pages}`
+                            : `${pub.conference}, ${pub.location}, ${pub.year}, pp. ${pub.pages}`
+                        }
+                    </div>
+
+                    <p class="text-gray-700 dark:text-gray-300">
+                        ${pub.abstract}
+                    </p>
+
+                    <div class="flex flex-wrap gap-2">
+                        ${pub.keywords.map(keyword => `
+                            <span class="px-2 py-1 text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-accent/10 dark:hover:bg-accent-light/10" onclick="document.getElementById('searchInput').value='${keyword}';updatePublications({keyword:'${keyword}'})">
+                                ${keyword}
+                            </span>
+                        `).join('')}
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span>${pub.citations} citaciones</span>
+                        </div>
+                        <a
+                            href="https://doi.org/${pub.doi}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1 text-sm text-accent dark:text-accent-light hover:underline"
+                        >
+                            Ver publicación
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    function setupEventListeners() {
+        const yearFilter = document.getElementById('yearFilter') as HTMLSelectElement;
+        const typeFilter = document.getElementById('typeFilter') as HTMLSelectElement;
+        const keywordFilter = document.getElementById('keywordFilter') as HTMLSelectElement;
+        const sortByFilter = document.getElementById('sortBy') as HTMLSelectElement;
+        const orderToggle = document.getElementById('orderToggle') as HTMLButtonElement;
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+
+        yearFilter?.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            updatePublications({ year: target.value });
+        });
+
+        typeFilter?.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            updatePublications({ type: target.value });
+        });
+
+        keywordFilter?.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            updatePublications({ keyword: target.value });
+        });
+
+        sortByFilter?.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            updatePublications({ sortBy: target.value });
+        });
+
+        orderToggle?.addEventListener('click', () => {
+            currentOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+            orderToggle.setAttribute('aria-label', `Orden ${currentOrder === 'asc' ? 'ascendente' : 'descendente'}`);
+            orderToggle.innerHTML = currentOrder === 'asc'
+                ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z"/></svg>'
+                : '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z"/></svg>';
+            
+            updatePublications({ order: currentOrder });
+        });
+
+        searchInput?.addEventListener('input', (e) => {
+            const target = e.target as HTMLInputElement;
+            
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            searchTimeout = setTimeout(() => {
+                updatePublications({ keyword: target.value });
+            }, 300) as unknown as number;
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        setupEventListeners();
+        const orderToggle = document.getElementById('orderToggle');
+        if (orderToggle) {
+            orderToggle.setAttribute('aria-label', 'Orden descendente');
+        }
+    });
+</script>
