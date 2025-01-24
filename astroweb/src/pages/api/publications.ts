@@ -4,7 +4,7 @@ import { getPublications } from '../../api/publications';
 export const GET: APIRoute = async ({ url }) => {
     try {
         const params = url.searchParams;
-        const filters: Record<string, any> = {};
+        const filters: Record<string, unknown> = {};
 
         // Extraer filtros de los parámetros de la URL
         if (params.has('year')) {
