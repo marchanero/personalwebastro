@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { getPublications } from './publications';
+import { describe, it, expect } from 'vitest';
+import { getPublications } from './publications.js';
 
 describe('Publications API', () => {
     describe('getPublications', () => {
@@ -70,7 +70,7 @@ describe('Publications API', () => {
         });
 
         it('should handle invalid filters gracefully', async () => {
-            const publications = await getPublications({ invalidFilter: 'value' } as any);
+            const publications = await getPublications({ invalidFilter: 'value' } as unknown);
             expect(publications).toBeDefined();
             expect(Array.isArray(publications)).toBe(true);
             expect(publications.length).toBeGreaterThan(0);
