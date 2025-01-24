@@ -36,7 +36,7 @@ jobs:
         cache-dependency-path: './astroweb/package-lock.json'
         
     - name: Install dependencies
-      run: npm ci
+      run: npm i
       
     - name: Run tests
       run: npm test
@@ -63,7 +63,7 @@ jobs:
         cache-dependency-path: './strapi-cms/package-lock.json'
         
     - name: Install dependencies
-      run: npm ci
+      run: npm i
       
     - name: Run tests
       run: npm test || true  # Permitir fallo si no hay tests configurados
@@ -85,7 +85,7 @@ jobs:
         cache-dependency-path: './serpapi/package-lock.json'
         
     - name: Install dependencies
-      run: npm ci
+      run: npm i
       
     - name: Run tests
       run: npm test || true  # Permitir fallo si no hay tests configurados
@@ -103,13 +103,13 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies frontend
-      run: cd astroweb && npm ci
+      run: cd astroweb && npm i
       
     - name: Run ESLint frontend
       run: cd astroweb && npm run lint
 
     - name: Install dependencies strapi
-      run: cd strapi-cms && npm ci
+      run: cd strapi-cms && npm i
       
     - name: Run ESLint strapi
       run: cd strapi-cms && npm run lint || true
