@@ -192,6 +192,10 @@ jobs:
           username: ${{ env.SERVER_USER }}
           password: orangepi.dev
           script: |
+            # Crear carpeta personalwebastro
+            mkdir -p /root/personalwebastro
+            cd /root/personalwebastro
+            
             # Detener y eliminar contenedores antiguos
             docker-compose down || true
             
