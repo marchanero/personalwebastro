@@ -1,6 +1,22 @@
 # Personal Web Astro
 
+[![Tests](https://github.com/[usuario]/personalwebastro/actions/workflows/tests.yml/badge.svg)](https://github.com/[usuario]/personalwebastro/actions/workflows/tests.yml)
+
 Sistema web personal construido con Astro, Strapi CMS y servicios adicionales.
+
+## Tests y CI
+
+El proyecto incluye tests automatizados y un sistema de integración continua:
+
+- **Tests Unitarios**: Implementados con Vitest
+- **CI/CD**: GitHub Actions ejecuta los tests en cada push y pull request
+- **Cobertura**: Tests para APIs y funcionalidades críticas
+
+Para ejecutar los tests localmente:
+```bash
+cd astroweb
+npm test
+```
 
 ## Arquitectura
 
