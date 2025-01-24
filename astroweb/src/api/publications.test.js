@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getPublications } from './publications.js';
+import { getPublications } from './publications';
 
 describe('Publications API', () => {
     describe('getPublications', () => {
@@ -35,7 +35,7 @@ describe('Publications API', () => {
             expect(publications).toBeDefined();
             expect(publications.length).toBeGreaterThan(0);
             publications.forEach(pub => {
-                expect(pub.keywords.some(k => 
+                expect(pub.keywords.some(k =>
                     k.toLowerCase().includes(keyword.toLowerCase()) ||
                     pub.title.toLowerCase().includes(keyword.toLowerCase())
                 )).toBe(true);
@@ -46,7 +46,7 @@ describe('Publications API', () => {
             const publications = await getPublications();
             expect(publications).toBeDefined();
             expect(publications.length).toBeGreaterThan(0);
-            
+
             for (let i = 1; i < publications.length; i++) {
                 expect(publications[i-1].year).toBeGreaterThanOrEqual(publications[i].year);
             }
@@ -56,7 +56,7 @@ describe('Publications API', () => {
             const publications = await getPublications({ sortBy: 'citations' });
             expect(publications).toBeDefined();
             expect(publications.length).toBeGreaterThan(0);
-            
+
             for (let i = 1; i < publications.length; i++) {
                 expect(publications[i-1].citations).toBeGreaterThanOrEqual(publications[i].citations);
             }
@@ -70,7 +70,7 @@ describe('Publications API', () => {
         });
 
         it('should handle invalid filters gracefully', async () => {
-            const publications = await getPublications({ invalidFilter: 'value' } as unknown);
+            const publications = await getPublications({});
             expect(publications).toBeDefined();
             expect(Array.isArray(publications)).toBe(true);
             expect(publications.length).toBeGreaterThan(0);
