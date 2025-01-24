@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getPublications } from './publications';
+import { getPublications } from '../src/api/publications';
 
 describe('Publications API', () => {
     describe('getPublications', () => {
