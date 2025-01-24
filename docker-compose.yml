@@ -6,7 +6,7 @@ services:
     build:
       context: ./astroweb
     ports:
-      - "80:80"
+      - "4321:4321"
     environment:
       - NODE_ENV=production
       - STRAPI_URL=http://strapi:1337
