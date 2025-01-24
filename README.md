@@ -1,166 +1,138 @@
-# Personal Web App
+# Personal Web Astro
 
-Esta aplicación consta de tres servicios principales:
+Sistema web personal construido con Astro, Strapi CMS y servicios adicionales.
 
-- Frontend (Astro)
-- CMS (Strapi)
-- API de búsqueda (SerpAPI)
+## Arquitectura
+
+El proyecto está compuesto por varios servicios:
+
+- **Frontend (Astro)**: Aplicación web principal
+- **Strapi CMS**: Sistema de gestión de contenidos
+- **PostgreSQL**: Base de datos para Strapi
+- **SerpAPI**: Servicio para obtención de datos externos
 
 ## Requisitos
 
 - Docker
 - Docker Compose
-- Node.js 18 o superior (para desarrollo local)
+- 4GB RAM mínimo recomendado
+- 10GB espacio en disco
 
-## Estructura del Proyecto
+## Configuración
 
-```
-.
-├── astroweb/         # Frontend en Astro
-├── strapi-cms/       # CMS Strapi
-└── serpapi/          # Servicio de SerpAPI
-```
-
-## Configuración para Despliegue Local
-
-1. Crea un archivo `.env` basado en `.env.example`:
+1. Copia el archivo de ejemplo de variables de entorno:
 ```bash
 cp .env.example .env
 ```
 
-2. Edita el archivo `.env` y configura las siguientes variables:
-   - Credenciales de PostgreSQL
-   - Claves secretas de Strapi
-   - Clave de API de SerpAPI
-   - URLs de los servicios
+2. Configura las variables en el archivo `.env`:
+- Variables PostgreSQL (POSTGRES_*)
+- Claves secretas Strapi (JWT_SECRET, etc.)
+- API key de SerpAPI
+- URLs de los servicios
 
-## Despliegue Local
+## Despliegue
 
-El proyecto incluye un script de despliegue que automatiza todo el proceso:
+El sistema incluye un script de despliegue automatizado con las siguientes características:
 
 ```bash
 ./deploy.sh
 ```
 
-Este script realizará las siguientes acciones:
-1. Verificará la existencia del archivo `.env`
-2. Construirá las imágenes de Docker
-3. Levantará todos los servicios
-4. Mostrará el estado final del despliegue
+### Características del Despliegue
 
-## Configuración de CI/CD
+- **Backup Automático**: Realiza backup de la base de datos antes del despliegue
+- **Verificación de Salud**: Comprueba el estado de cada servicio
+- **Sistema de Rollback**: Restaura el estado anterior en caso de fallo
+- **Rotación de Backups**: Mantiene los últimos 5 backups
+- **Limpieza Automática**: Elimina imágenes Docker antiguas
 
-Para el despliegue automático a través de GitHub Actions, necesitas configurar los siguientes secretos en tu repositorio:
+## Monitorización y Mantenimiento
 
-### Secretos Requeridos
+### Logs
 
-1. Secretos de Base de Datos:
-   - `POSTGRES_DB`: Nombre de la base de datos
-   - `POSTGRES_USER`: Usuario de PostgreSQL
-   - `POSTGRES_PASSWORD`: Contraseña de PostgreSQL
+Los logs de cada servicio se encuentran en:
+```
+/var/lib/docker/containers/[container-id]/[container-id]-json.log
+```
 
-2. Secretos de Strapi:
-   - `JWT_SECRET`: Clave secreta para JWT
-   - `ADMIN_JWT_SECRET`: Clave secreta para JWT del admin
-   - `APP_KEYS`: Claves de aplicación (separadas por comas)
-   - `API_TOKEN_SALT`: Salt para tokens de API
+Configuración de rotación:
+- Tamaño máximo: 10MB
+- Máximo 3 archivos
 
-3. Secretos de API:
-   - `SERPAPI_KEY`: Clave de API de SerpAPI
+### Backups
 
-4. Secretos de Despliegue:
-   - `GITHUB_TOKEN`: Token de GitHub (automáticamente proporcionado)
-   - `ENV_FILE`: Contenido completo del archivo .env para producción
+Los backups se almacenan en:
+```
+./postgres/backup/
+```
 
-### Configuración de Secretos
+Se mantienen los últimos 5 backups automáticamente.
 
-1. Ve a la configuración de tu repositorio en GitHub
-2. Navega a "Settings" > "Secrets and variables" > "Actions"
-3. Haz clic en "New repository secret"
-4. Añade cada uno de los secretos mencionados arriba
+### Recursos
 
-## URLs de Acceso
+Límites de recursos por servicio:
 
-Después del despliegue, los servicios estarán disponibles en:
+- Frontend:
+  - CPU: 0.5 cores
+  - RAM: 512MB
+- Strapi:
+  - CPU: 1 core
+  - RAM: 1GB
+- PostgreSQL:
+  - CPU: 1 core
+  - RAM: 1GB
+- SerpAPI:
+  - CPU: 0.5 cores
+  - RAM: 512MB
+
+## Optimizaciones
+
+### Frontend (Nginx)
+
+- Compresión Gzip y Brotli
+- Caché agresiva para archivos estáticos
+- Headers de seguridad
+- SSL optimizado
+- Proxy inverso configurado
+
+### Base de Datos
+
+- Healthchecks configurados
+- Backup automático
+- Sistema de recuperación
+
+### Seguridad
+
+- Headers de seguridad configurados
+- Límites de recursos establecidos
+- Acceso restringido a archivos sensibles
+- SSL/TLS optimizado
+
+## Troubleshooting
+
+### Verificar Estado de Servicios
+```bash
+docker-compose ps
+```
+
+### Ver Logs
+```bash
+docker-compose logs [servicio]
+```
+
+### Reiniciar Servicio
+```bash
+docker-compose restart [servicio]
+```
+
+### Backup Manual
+```bash
+docker-compose exec -T postgres pg_dump -U $POSTGRES_USER $POSTGRES_DB > backup.sql
+```
+
+## URLs
 
 - Frontend: http://localhost
 - Strapi CMS: http://localhost:1337
 - SerpAPI: http://localhost:3001
-
-## Mantenimiento
-
-### Logs
-```bash
-# Ver logs de todos los servicios
-docker-compose logs -f
-
-# Ver logs de un servicio específico
-docker-compose logs -f [frontend|strapi|serpapi]
-```
-
-### Gestión de Servicios
-```bash
-# Detener servicios
-docker-compose down
-
-# Reiniciar servicios
-docker-compose restart
-
-# Reconstruir servicios
-docker-compose up -d --build
-```
-
-## Desarrollo Local
-
-Para desarrollo local, cada servicio puede ejecutarse independientemente:
-
-### Frontend (Astro)
-```bash
-cd astroweb
-npm install
-npm run dev
-```
-
-### Strapi CMS
-```bash
-cd strapi-cms
-npm install
-npm run develop
-```
-
-### SerpAPI Service
-```bash
-cd serpapi
-npm install
-node index.mjs
-```
-
-## Backups
-
-La base de datos y los archivos de Strapi se almacenan en volúmenes de Docker:
-- `postgres-data`: Datos de PostgreSQL
-- `strapi-uploads`: Archivos subidos a Strapi
-
-Para realizar backups:
-```bash
-# Backup de la base de datos
-docker-compose exec postgres pg_dump -U strapi > backup.sql
-
-# Backup de archivos de Strapi
-docker cp $(docker-compose ps -q strapi):/app/public/uploads ./backups/uploads
-```
-
-## CI/CD Pipeline
-
-El proyecto utiliza GitHub Actions para CI/CD con los siguientes jobs:
-
-1. **test-frontend**: Ejecuta tests del frontend
-2. **test-strapi**: Ejecuta tests de Strapi
-3. **test-serpapi**: Preparado para tests de SerpAPI
-4. **lint**: Verifica el código con ESLint
-5. **build-and-push**: Construye y publica las imágenes Docker
-6. **deploy**: Despliega la aplicación en el servidor
-
-El pipeline se ejecuta automáticamente en:
-- Push a la rama main
-- Pull requests a la rama main

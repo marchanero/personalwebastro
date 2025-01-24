@@ -1,51 +1,56 @@
 import express from 'express';
-import axios from 'axios';
+import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const SERPAPI_KEY = process.env.SERPAPI_KEY;
+const port = 3001;
 
-if (!SERPAPI_KEY) {
-  console.error('SERPAPI_KEY is not set');
-  process.exit(1);
-}
+// Middleware para parsear JSON
+app.use(express.json());
 
-app.get('/api/publications', async (req, res) => {
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy' });
+});
+
+// Endpoint para búsquedas en Google Scholar
+app.get('/api/scholar', async (req, res) => {
   try {
-    const response = await axios.get('https://serpapi.com/search', {
-      params: {
-        api_key: SERPAPI_KEY,
-        engine: 'google_scholar',
-        q: 'your search query here', // Replace with the actual search query
-      },
-    });
-    res.json(response.data);
+    const { author } = req.query;
+    if (!author) {
+      return res.status(400).json({ error: 'Author parameter is required' });
+    }
+
+    const apiKey = process.env.SERPAPI_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'SERPAPI_KEY not configured' });
+    }
+
+    const url = `https://serpapi.com/search.json?engine=google_scholar_author&author_id=${author}&api_key=${apiKey}`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    res.json(data);
   } catch (error) {
-    console.error('Error fetching publications:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching from SerpAPI:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
-app.get('/', (req, res) => {
-  res.status(404).json({ error: 'Endpoint not available' });
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something broke!' });
 });
 
-app.get('/api/health', (req, res) => {
-  const currentTime = new Date().toISOString();
-  const latitude = 40.416775; // Example latitude for Madrid
-  res.status(200).json({ status: 'ok', time: currentTime, latitude });
-});
-
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-}
-);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Start server
+app.listen(port, '0.0.0.0', () => {
+  console.log(`SerpAPI service running on port ${port}`);
 });
