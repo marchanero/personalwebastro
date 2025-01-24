@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import Biography from '../components/Biography.astro';
 import Research from '../components/Research.astro';
 import Teaching from '../components/Teaching.astro';
 import Contact from '../components/Contact.astro';
@@ -24,10 +25,11 @@ const seoMetadata = {
 
 <Layout title={seoMetadata.title} description={seoMetadata.description}>
 	<main class="flex flex-col min-h-screen">
-		<Hero />
-		<Research />
-		<Teaching />
-		<Contact />
+	    <Hero />
+	    <Biography />
+	    <Research />
+	    <Teaching />
+	    <Contact />
 	</main>
 	<footer class="py-8 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-auto">
 		<div class="container max-w-container mx-auto px-6">
