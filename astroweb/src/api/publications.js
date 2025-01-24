@@ -22,16 +22,6 @@ const CACHE_KEY = 'publications_cache';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 /**
- * Retrieves publications with optional filtering and sorting
- * @param {Object} options - Filter and sort options
- * @param {number} [options.year] - Filter by year
- * @param {'journal'|'conference'} [options.type] - Filter by type
- * @param {string} [options.keyword] - Filter by keyword
- * @param {'year'|'citations'} [options.sortBy='year'] - Sort field
- * @param {'asc'|'desc'} [options.order='desc'] - Sort order
- * @returns {Promise<Publication[]>} Array of publications
- */
-/**
  * @typedef {Object} PublicationOptions
  * @property {string} [year] - Año de publicación
  * @property {'journal'|'conference'} [type] - Tipo de publicación
@@ -60,10 +50,10 @@ export async function getPublications(options = {}) {
 
         // Si no hay caché, usar los datos estáticos
         const result = filterAndSortPublications(publications, options);
-        
+
         // Guardar en caché solo en el cliente
         cachePublications(result);
-        
+
         return result;
     } catch (error) {
         console.error('Error fetching publications:', error);
@@ -77,7 +67,7 @@ export async function getPublications(options = {}) {
  */
 function getCachedPublications() {
     if (typeof window === 'undefined') return null;
-    
+
     try {
         const cached = localStorage.getItem(CACHE_KEY);
         if (!cached) return null;
@@ -101,7 +91,7 @@ function getCachedPublications() {
  */
 function cachePublications(data) {
     if (typeof window === 'undefined') return;
-    
+
     try {
         localStorage.setItem(CACHE_KEY, JSON.stringify({
             data,
@@ -112,12 +102,6 @@ function cachePublications(data) {
     }
 }
 
-/**
- * Filter and sort publications based on options
- * @param {Publication[]} publications
- * @param {Object} options
- * @returns {Publication[]}
- */
 /**
  * Filtra y ordena las publicaciones según las opciones proporcionadas
  * @param {Publication[]} data - Array de publicaciones a filtrar
@@ -148,7 +132,7 @@ function filterAndSortPublications(data, options) {
     // Apply sorting
     const sortBy = options.sortBy || 'year';
     const order = options.order || 'desc';
-    
+
     filtered.sort((a, b) => {
         const compareValue = order === 'asc' ? 1 : -1;
         return a[sortBy] > b[sortBy] ? compareValue : -compareValue;
