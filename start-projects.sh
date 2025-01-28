@@ -7,4 +7,4 @@ cd /home/robert/personalwebastro/astroweb && npm run dev &
 cd /home/robert/personalwebastro/strapi-cms && npm run develop &
 
 # Navigate to the SerpAPI project directory and start the API server
-cd /home/robert/personalwebastro/serpapi && node index.mjs
+#cd /home/robert/personalwebastro/serpapi && node index.mjs
